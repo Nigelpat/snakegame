@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Snake Arcade — by Patrick Nanlohy</title>
+
+  <!-- Fonts + Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Phaser 3 -->
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.js"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css" />
+  <meta name="description" content="A modern browser Snake game with difficulty, wall-wrap, pause menu, and leaderboard." />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <span class="logo">🐍</span>
+      <div class="titles">
+        <h1>Snake Arcade</h1>
+        <p class="byline">by Patrick Nanlohy</p>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a href="https://github.com/Nigelpat/snake-arcade" target="_blank" rel="noopener">Source</a>
+      <a href="#" id="how-to-play">How to Play</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <section class="hero">
+      <div class="hero-copy">
+        <h2>Classic Snake, modernized.</h2>
+        <p>
+          Difficulty settings, wall-wrap, bonus fruit, a pause menu with resume & main menu, and a local leaderboard —
+          all right in your browser. No installs needed.
+        </p>
+        <div class="hero-actions">
+          <button id="btn-start" class="btn btn-primary">▶ Start</button>
+          <button id="btn-settings" class="btn">⚙ Settings</button>
+          <button id="btn-leaderboard" class="btn">🏆 Leaderboard</button>
+        </div>
+      </div>
+
+      <div id="game-container" class="game-card" aria-label="Game canvas area"></div>
+    </section>
+
+    <section class="features">
+      <article>
+        <h3>🎯 Difficulty</h3>
+        <p>Easy, Normal, Hard — speed & scoring adjust automatically.</p>
+      </article>
+      <article>
+        <h3>🌀 Wall Wrap</h3>
+        <p>Toggle Pac-Man style edges on or off.</p>
+      </article>
+      <article>
+        <h3>✨ Bonus Fruit</h3>
+        <p>Golden fruit drops occasionally for big points.</p>
+      </article>
+      <article>
+        <h3>⏸ Pause Menu</h3>
+        <p>Press <kbd>ESC</kbd> anytime to pause: Resume, Main Menu, or Quit.</p>
+      </article>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; <span id="year"></span> Patrick Nanlohy • Built with Phaser 3</p>
+  </footer>
+
+  <!-- Game -->
+  <script src="game.js"></script>
+
+  <script>
+    // Page-level UX bindings
+    const yearEl = document.getElementById('year');
+    yearEl.textContent = new Date().getFullYear();
+
+    document.getElementById('how-to-play').addEventListener('click', (e) => {
+      e.preventDefault();
+      alert(
+`Controls:
+• Arrow keys to move
+• ESC to pause
+• Eat red fruit (+1) and golden fruit (+10)
+• Don't hit yourself!
+Settings:
+• Difficulty changes speed and score multiplier
+• Wall Wrap lets you pass through edges`
+      );
+    });
+
+    // Buttons to bridge page -> Phaser scenes
+    const bridge = window.__SNAKE_BRIDGE__ = {
+      start: () => window.dispatchEvent(new CustomEvent('snake:start')),
+      settings: () => window.dispatchEvent(new CustomEvent('snake:settings')),
+      leaderboard: () => window.dispatchEvent(new CustomEvent('snake:leaderboard')),
+    };
+
+    document.getElementById('btn-start').addEventListener('click', bridge.start);
+    document.getElementById('btn-settings').addEventListener('click', bridge.settings);
+    document.getElementById('btn-leaderboard').addEventListener('click', bridge.leaderboard);
+  </script>
+</body>
+</html>
